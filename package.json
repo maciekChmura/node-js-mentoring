@@ -1,0 +1,33 @@
+{
+  "name": "node_js_training",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "webpack": "webpack -d --watch",
+    "start": "npm run webpack",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maciekChmura/node-js-training.git"
+  },
+  "keywords": [
+    "node"
+  ],
+  "author": "maciekChmura",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/maciekChmura/node-js-training/issues"
+  },
+  "homepage": "https://github.com/maciekChmura/node-js-training#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "webpack": "^4.5.0",
+    "webpack-cli": "^2.0.14"
+  }
+}
