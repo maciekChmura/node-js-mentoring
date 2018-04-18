@@ -1,11 +1,12 @@
 {
   "name": "node_js_training",
   "version": "1.0.0",
-  "description": "",
+  "description": "node js training",
   "main": "app.js",
   "scripts": {
-    "webpack": "webpack -d --watch",
-    "start": "npm run webpack",
+    "webpack": "webpack",
+    "webpack-watch": "webpack -d --watch",
+    "start": "npm run webpack && echo running app: && node ./build/bundle.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
