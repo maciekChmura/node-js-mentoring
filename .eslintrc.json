@@ -1,0 +1,18 @@
+{
+  "extends": "airbnb-base",
+  "parserOptions": {
+    "sourceType": "script"
+  },
+  "rules": {
+    "no-unused-expressions": [
+      "error",
+      {
+        "allowTernary": true
+      }
+    ],
+    "multiline-ternary": [
+      "error",
+      "always"
+    ]
+  }
+}

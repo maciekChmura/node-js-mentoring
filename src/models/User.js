@@ -1,8 +1,9 @@
-export default class User {
+'use strict';
+
+class User {
   constructor() {
-    console.log(`User module`);
+    console.log('User module');
   }
 }
 
-
-
+module.exports = User;
