@@ -4,7 +4,9 @@
   "description": "node js training",
   "main": "app.js",
   "scripts": {
-    "start": "echo running app: && node ./src/app.js",
+    "webpack": "webpack",
+    "webpack-watch": "webpack -d --watch",
+    "start": "npm run webpack && echo running app: && node ./build/bundle.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,8 +22,13 @@
     "url": "https://github.com/maciekChmura/node-js-training/issues"
   },
   "homepage": "https://github.com/maciekChmura/node-js-training#readme",
-  "devDependencies": {},
-  "dependencies": {
-    "csvtojson": "^1.1.9"
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "webpack": "^4.5.0",
+    "webpack-cli": "^2.0.14"
   }
 }
