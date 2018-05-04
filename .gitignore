@@ -1,5 +1,4 @@
 node_modules
-
-._.DS_Store
 .idea
 package-lock.json
+build
