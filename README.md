@@ -1,1 +1,1 @@
-# node-js-training
+## A project to learn and understand NodeJS

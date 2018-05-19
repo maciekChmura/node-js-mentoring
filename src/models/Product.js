@@ -1,5 +1,9 @@
-export default class Product {
+'use strict';
+
+class Product {
   constructor() {
-    console.log(`Product module`);
+    console.log('Product module');
   }
 }
+
+module.exports = Product;
