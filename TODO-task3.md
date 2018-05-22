@@ -48,8 +48,8 @@ function convertToFile(filePath) { /* ... */ }
 * ~~If streams.js util does not contain an action passed or received argument is invalid, appropriate error message should be shown to user. Additionally, util may throw relevant exception.~~
 * Any number of action functions inside streams.js could be implemented but the following ones are mandatory for realization:
   * ~~reverse function to reverse string data from process.stdin to process.stdout.~~
-  * transform function to convert data from process.stdin to upper-cased data on process.stdout (e.g. using through2 module).
-  * outputFile function that will use fs.createReadStream() to pipe the given file provided by --file option to process.stdout.
+  * ~~transform function to convert data from process.stdin to upper-cased data on process.stdout (e.g. using through2 module).~~
+  * ~~outputFile function that will use fs.createReadStream() to pipe the given file provided by --file option to process.stdout.~~
   * convertFromFile function to convert file provided by --file option from csv to json and output data to process.stdout. Function should check that the passed file name is valid (see task 5).
   * convertToFile function to convert file provided by --file option from csv to json and output data to a result file with the same name but json extension. Function should check that the passed file name is valid (see task 5) and use fs.createWriteStream additionally.
 * Implement cssBundler action function which will use an extra parameter --path (-p as a shortcut). It should do the following:
