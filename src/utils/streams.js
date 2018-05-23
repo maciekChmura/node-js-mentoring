@@ -1,8 +1,12 @@
 'use strict';
 
 const fs = require('fs');
+const fsPromises = require('fs/promises');
 const program = require('commander');
 const csvjson = require('csvjson');
+const axios = require('axios');
+
+const url = 'https://gist.githubusercontent.com/eirikbakke/1059266/raw/d81dba46c76169c2b253de0baed790677883c221/gistfile1.css';
 
 // action functions
 const reverse = (str) => {
@@ -40,6 +44,47 @@ const convertToFile = (filePath) => {
   read.pipe(toObject).pipe(stringify).pipe(write);
 };
 
+// CSS Bundler
+
+const readDir = async (dirPath) => {
+  return fsPromises.readdir(dirPath);
+};
+
+const readFile = async (dirPath, fileNames) => {
+  return fileNames.map(fileName => fsPromises.readFile(`${dirPath}/${fileName}`));
+};
+
+const readFileFromURL = async (fileUrl) => {
+  try {
+    const response = await axios.get(fileUrl);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const bundler = async (dirPath) => {
+  // read Dir
+  const filesInDir = await readDir(dirPath);
+
+  // read Files from Dir
+  const fileData = await readFile(dirPath, filesInDir);
+  const data = await Promise.all(fileData);
+
+  // read CSS from URL
+  const fileFromURL = await readFileFromURL(url);
+
+  // concat files
+  data.push(fileFromURL);
+  const dataString = data.join('').toString();
+
+  // save bundle to disk
+  const writeStream = fs.createWriteStream(`${dirPath}/_bundle.css`);
+  writeStream.write(dataString);
+  writeStream.on('error', err => console.log(err));
+  writeStream.on('close', () => console.log(`file saved to: ${dirPath}/_bundle.css`));
+  writeStream.end();
+};
 
 // handling CLI
 program
@@ -47,8 +92,9 @@ program
   .option('-r --reverse <str>', 'reverse a string')
   .option('-t --transform <str>', 'transform a string to upper case')
   .option('-o --outputFile <filePath>', 'output file content')
-  .option('-c --convertFromFile <filePath>', 'output file content')
-  .option('-f --convertToFile <filePath>', 'output file content to a file')
+  .option('-c --convertFromFile <filePath>', 'convert file content: csv -> json')
+  .option('-f --convertToFile <filePath>', 'convert file content: csv -> json and save to file')
+  .option('-b --bundle <filesPath>', 'bundle css files and save to file')
   .parse(process.argv);
 
 if (program.reverse) {
@@ -69,6 +115,10 @@ if (program.convertFromFile) {
 
 if (program.convertToFile) {
   convertToFile(program.convertToFile);
+}
+
+if (program.bundle) {
+  bundler(program.bundle);
 }
 
 if (process.argv.length < 3) {
