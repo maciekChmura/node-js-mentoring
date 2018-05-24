@@ -6,6 +6,7 @@ const program = require('commander');
 const csvjson = require('csvjson');
 const axios = require('axios');
 
+// example url with css file for css bundler
 const url = 'https://gist.githubusercontent.com/eirikbakke/1059266/raw/d81dba46c76169c2b253de0baed790677883c221/gistfile1.css';
 
 // action functions
@@ -28,7 +29,10 @@ const convertFromFile = (filePath) => {
   read.on('error', err => console.log(`reading error: ${err}`));
   const toObject = csvjson.stream.toObject();
   const stringify = csvjson.stream.stringify();
-  read.pipe(toObject).pipe(stringify).pipe(process.stdout);
+  read
+    .pipe(toObject)
+    .pipe(stringify)
+    .pipe(process.stdout);
 };
 
 const convertToFile = (filePath) => {
@@ -41,7 +45,10 @@ const convertToFile = (filePath) => {
   write.on('close', () => console.log(`file saved at: ${path}${fileName}.json`));
   const toObject = csvjson.stream.toObject();
   const stringify = csvjson.stream.stringify();
-  read.pipe(toObject).pipe(stringify).pipe(write);
+  read
+    .pipe(toObject)
+    .pipe(stringify)
+    .pipe(write);
 };
 
 // CSS Bundler
@@ -58,8 +65,8 @@ const readFileFromURL = async (fileUrl) => {
   try {
     const response = await axios.get(fileUrl);
     return response.data;
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
   }
 };
 
@@ -122,6 +129,6 @@ if (program.bundle) {
 }
 
 if (process.argv.length < 3) {
-  console.log('please specify some arguments:');
+  console.log('please specify an option:');
   program.help();
 }
