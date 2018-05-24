@@ -1,0 +1,8 @@
+cd src/utils/
+
+node streams.js -r 'Hello World'
+node streams.js -t 'Hello World'
+node streams.js -o 'C:\Users\mch\dev\node-js-training\data\1.csv'
+node streams.js -c 'C:\Users\mch\dev\node-js-training\data\1.csv'
+node streams.js -f 'C:\Users\mch\dev\node-js-training\data\1.csv'
+node streams.js -b 'C:\Users\mch\dev\node-js-training\src\css'
