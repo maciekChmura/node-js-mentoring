@@ -3,8 +3,8 @@
 const config = require('./config/config');
 const User = require('./models/User');
 const Product = require('./models/Product');
-const DirWatcher = require('./dirWatcher/dirwatcher');
-const Importer = require('./importer/importer');
+const { DirWatcher } = require('./dirWatcher');
+const Importer = require('./importer');
 
 console.log(config.name);
 
