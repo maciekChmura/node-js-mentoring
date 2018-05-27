@@ -4,7 +4,7 @@
   "description": "node js training",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon ./src/app.js",
+    "start": "nodemon ./src/index.js",
     "start-normal": "echo running app: && node ./src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -28,8 +28,10 @@
     "nodemon": "^1.17.4"
   },
   "dependencies": {
+    "cookie-parser": "^1.4.3",
     "csvjson": "^5.0.0",
     "axios": "^0.18.0",
-    "commander": "^2.15.1"
+    "commander": "^2.15.1",
+    "express": "^4.16.3"
   }
 }
