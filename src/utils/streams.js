@@ -1,7 +1,7 @@
 'use strict';
 
 const fs = require('fs');
-const fsPromises = require('fs/promises');
+const fsPromises = require('fs').promises;
 const program = require('commander');
 const csvjson = require('csvjson');
 const axios = require('axios');
@@ -9,46 +9,48 @@ const axios = require('axios');
 // example url with css file for css bundler
 const url = 'https://gist.githubusercontent.com/eirikbakke/1059266/raw/d81dba46c76169c2b253de0baed790677883c221/gistfile1.css';
 
-// action functions
-const reverse = (str) => {
-  console.log(str.split('').reverse().join(''));
-};
-
-const transform = (str) => {
-  console.log(str.toUpperCase());
-};
-
-const outputFile = (filePath) => {
+// I/O functions
+const readStream = (filePath) => {
   const read = fs.createReadStream(filePath, 'utf8');
   read.on('error', err => console.log(`reading error: ${err}`));
-  read.pipe(process.stdout);
+  return read;
 };
 
-const convertFromFile = (filePath) => {
-  const read = fs.createReadStream(filePath, 'utf8');
-  read.on('error', err => console.log(`reading error: ${err}`));
-  const toObject = csvjson.stream.toObject();
-  const stringify = csvjson.stream.stringify();
-  read
-    .pipe(toObject)
-    .pipe(stringify)
-    .pipe(process.stdout);
-};
-
-const convertToFile = (filePath) => {
-  const read = fs.createReadStream(filePath, 'utf8');
-  read.on('error', err => console.log(`reading error: ${err}`));
+const writeStream = (filePath) => {
   const fileName = filePath.replace(/^.*[\\\/]/, '').slice(0, -4);
   const path = filePath.replace(/(.*?)[^\\/]*\..*$/, '$1');
   const write = fs.createWriteStream(`${path}${fileName}.json`);
   write.on('error', err => console.log(`writing error: ${err}`));
-  write.on('close', () => console.log(`file saved at: ${path}${fileName}.json`));
-  const toObject = csvjson.stream.toObject();
-  const stringify = csvjson.stream.stringify();
-  read
+  write.on('close', () => console.log(`file saved to: ${path}${fileName}.json`));
+  return write;
+};
+// stream helpers
+const toObject = csvjson.stream.toObject();
+const stringify = csvjson.stream.stringify();
+
+// action functions
+const reverse = string => string.split('').reverse().join('');
+
+const transform = string => string.toUpperCase();
+
+const outputFile = (readStr, writeStr) => {
+  readStr.pipe(writeStr);
+};
+
+const convertFromFile = (readStr, writeStr) => {
+  readStr
     .pipe(toObject)
     .pipe(stringify)
-    .pipe(write);
+    .pipe(writeStr);
+};
+
+// logic same as convertFromFile
+// could be removed, but required in homework3 spec.
+const convertToFile = (readStr, writeStr) => {
+  readStr
+    .pipe(toObject)
+    .pipe(stringify)
+    .pipe(writeStr);
 };
 
 // CSS Bundler
@@ -75,8 +77,8 @@ const bundler = async (dirPath) => {
   const filesInDir = await readDir(dirPath);
 
   // read Files from Dir
-  const fileData = await readFile(dirPath, filesInDir);
-  const data = await Promise.all(fileData);
+  const filesData = await readFile(dirPath, filesInDir);
+  const data = await Promise.all(filesData);
 
   // read CSS from URL
   const fileFromURL = await readFileFromURL(url);
@@ -95,33 +97,33 @@ const bundler = async (dirPath) => {
 
 // handling CLI
 program
-  .version('0.1.0', '-v --version')
-  .option('-r --reverse <str>', 'reverse a string')
-  .option('-t --transform <str>', 'transform a string to upper case')
-  .option('-o --outputFile <filePath>', 'output file content')
-  .option('-c --convertFromFile <filePath>', 'convert file content: csv -> json')
-  .option('-f --convertToFile <filePath>', 'convert file content: csv -> json and save to file')
-  .option('-b --bundle <filesPath>', 'bundle css files and save to file')
+  .version('0.1.0', '-v, --version')
+  .option('-r, --reverse <str>', 'reverse a string')
+  .option('-t, --transform <str>', 'transform a string to upper case')
+  .option('-o, --outputFile <filePath>', 'output file content')
+  .option('-c, --convertFromFile <filePath>', 'convert file content: csv -> json and show output')
+  .option('-f, --convertToFile <filePath>', 'convert file content: csv -> json and save to file')
+  .option('-b, --bundle <filesPath>', 'bundle css files and save to file')
   .parse(process.argv);
 
 if (program.reverse) {
-  reverse(program.reverse);
+  console.log(reverse(program.reverse));
 }
 
 if (program.transform) {
-  transform(program.transform);
+  console.log(transform(program.transform));
 }
 
 if (program.outputFile) {
-  outputFile(program.outputFile);
+  outputFile(readStream(program.outputFile), process.stdout);
 }
 
 if (program.convertFromFile) {
-  convertFromFile(program.convertFromFile);
+  convertFromFile(readStream(program.convertFromFile), process.stdout);
 }
 
 if (program.convertToFile) {
-  convertToFile(program.convertToFile);
+  convertToFile(readStream(program.convertToFile), writeStream(program.convertToFile));
 }
 
 if (program.bundle) {

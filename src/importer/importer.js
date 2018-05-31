@@ -1,7 +1,7 @@
 'use strict';
 
 const fs = require('fs');
-const fsPromises = require('fs/promises');
+const fsPromises = require('fs').promises;
 const csvjson = require('csvjson');
 const { FILE_CHANGED, FILE_DELETED } = require('../dirWatcher');
 

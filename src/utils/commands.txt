@@ -6,3 +6,8 @@ node streams.js -o 'C:\Users\mch\dev\node-js-training\data\1.csv'
 node streams.js -c 'C:\Users\mch\dev\node-js-training\data\1.csv'
 node streams.js -f 'C:\Users\mch\dev\node-js-training\data\1.csv'
 node streams.js -b 'C:\Users\mch\dev\node-js-training\src\css'
+
+node streams.js -o '/mnt/c/Users/mch/dev/node-js-training/data/1.csv'
+node streams.js -c '/mnt/c/Users/mch/dev/node-js-training/data/1.csv'
+node streams.js -f '/mnt/c/Users/mch/dev/node-js-training/data/1.csv'
+node streams.js -b '/mnt/c/Users/mch/dev/node-js-training/src/css'
