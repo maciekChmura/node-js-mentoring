@@ -1,6 +1,7 @@
 'use strict';
 
 const fs = require('fs');
+const path = require('path');
 const fsPromises = require('fs').promises;
 const program = require('commander');
 const csvjson = require('csvjson');
@@ -17,11 +18,11 @@ const readStream = (filePath) => {
 };
 
 const writeStream = (filePath) => {
-  const fileName = filePath.replace(/^.*[\\\/]/, '').slice(0, -4);
-  const path = filePath.replace(/(.*?)[^\\/]*\..*$/, '$1');
-  const write = fs.createWriteStream(`${path}${fileName}.json`);
+  const fileName = path.basename(filePath, 'csv');
+  const dir = path.dirname(filePath);
+  const write = fs.createWriteStream(`${dir}/${fileName}json`);
   write.on('error', err => console.log(`writing error: ${err}`));
-  write.on('close', () => console.log(`file saved to: ${path}${fileName}.json`));
+  write.on('close', () => console.log(`file saved to: ${dir}/${fileName}json`));
   return write;
 };
 // stream helpers
