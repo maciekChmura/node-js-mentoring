@@ -28,6 +28,8 @@
     "nodemon": "^1.17.4"
   },
   "dependencies": {
-    "csvjson": "^5.0.0"
+    "csvjson": "^5.0.0",
+    "axios": "^0.18.0",
+    "commander": "^2.15.1"
   }
 }

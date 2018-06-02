@@ -1,6 +1,6 @@
 'use strict';
 
-const fsPromises = require('fs/promises');
+const fsPromises = require('fs').promises;
 const { EventEmitter } = require('events');
 const { FILE_CHANGED, FILE_DELETED } = require('./constants');
 
