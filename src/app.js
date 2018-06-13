@@ -8,10 +8,10 @@ const Importer = require('./importer');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 
-console.log(config.name); // eslint-disable-line
+console.log(config.name); // eslint-disable-line no-console
 
-const product = new Product(); // eslint-disable-line
-const user = new User(); // eslint-disable-line
+const product = new Product(); // eslint-disable-line no-unused-vars
+const user = new User(); // eslint-disable-line no-unused-vars
 
 const dirWatcher = new DirWatcher();
 const importer = new Importer();
@@ -25,13 +25,13 @@ app.use(cookieParser());
 
 app.use((req, res, next) => {
   req.parsedCookies = req.cookies;
-  console.log(req.parsedCookies);
+  console.log(req.parsedCookies); // eslint-disable-line no-console
   next();
 });
 
 app.use((req, res, next) => {
   req.parsedQuery = req.query;
-  console.log(req.parsedQuery);
+  console.log(req.parsedQuery); // eslint-disable-line no-console
   next();
 });
 
@@ -44,8 +44,7 @@ app.get('/api/products', (req, res) => {
   res.end();
 });
 
-app.get('/api/products/:id', (req, res) => {
-  const { id } = req.params;
+app.get('/api/products/:id', ({ params: { id } }, res) => {
   res.send(`Return SINGLE product of id: ${id}`);
   res.end();
 });
