@@ -23,15 +23,20 @@ importer.listen(dirWatcher);
 // express app
 const app = express();
 
-const userName = 'Luke';
-const password = 'may4';
+const testUser = {
+  id: '1',
+  userName: 'Luke',
+  email: 'jedimasta@republic.com',
+  password: 'may4',
+};
+
 const authSuccess = {
   code: 200,
   message: 'OK',
   data: {
     user: {
-      email: 'email@gmail.com',
-      username: userName,
+      email: testUser.email,
+      userName: testUser.userName,
     },
   },
   token: '...',
@@ -43,9 +48,9 @@ const authFailed = {
 };
 
 app.get('/auth', (req, res) => {
-  if (userName === req.parsedQuery.userName
-    && password === req.parsedQuery.password) {
-    const token = jwt.sign(authSuccess, 'shhh');
+  if (testUser.userName === req.parsedQuery.userName
+    && testUser.password === req.parsedQuery.password) {
+    const token = jwt.sign(testUser, 'secretKey');
     res.send(JSON.stringify(authSuccess));
     res.end();
   } else {
