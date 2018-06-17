@@ -8,10 +8,10 @@ const Importer = require('./importer');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 
-console.log(config.name);
+console.log(config.name); // eslint-disable-line no-console
 
-const product = new Product();
-const user = new User();
+const product = new Product(); // eslint-disable-line no-unused-vars
+const user = new User(); // eslint-disable-line no-unused-vars
 
 const dirWatcher = new DirWatcher();
 const importer = new Importer();
@@ -21,5 +21,48 @@ importer.listen(dirWatcher);
 
 // express app
 const app = express();
+app.use(cookieParser());
+
+app.use((req, res, next) => {
+  req.parsedCookies = req.cookies;
+  console.log(req.parsedCookies); // eslint-disable-line no-console
+  next();
+});
+
+app.use((req, res, next) => {
+  req.parsedQuery = req.query;
+  console.log(req.parsedQuery); // eslint-disable-line no-console
+  next();
+});
+
+app.get('/', (req, res) => {
+  res.end('hello express');
+});
+
+app.get('/api/products', (req, res) => {
+  res.send('Returning ALL products');
+  res.end();
+});
+
+app.get('/api/products/:id', ({ params: { id } }, res) => {
+  res.send(`Return SINGLE product of id: ${id}`);
+  res.end();
+});
+
+app.get('/api/products/:id/reviews', (req, res) => {
+  const { id } = req.params;
+  res.send(`Return ALL reviews for a single product of id: ${id}`);
+  res.end();
+});
+
+app.get('/api/users', (req, res) => {
+  res.send('Return ALL users');
+  res.end();
+});
+
+app.post('/api/products', (req, res) => {
+  res.send('Add NEW product and return it');
+  res.end();
+});
 
 module.exports = app;
