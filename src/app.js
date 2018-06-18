@@ -7,6 +7,7 @@ const { DirWatcher } = require('./dirWatcher');
 const Importer = require('./importer');
 const express = require('express');
 const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
 
 console.log(config.name); // eslint-disable-line no-console
 
@@ -63,6 +64,42 @@ app.get('/api/users', (req, res) => {
 app.post('/api/products', (req, res) => {
   res.send('Add NEW product and return it');
   res.end();
+});
+
+const testUser = {
+  id: '1',
+  userName: 'Luke',
+  email: 'jedimasta@republic.com',
+  password: 'may4',
+};
+
+const authSuccess = {
+  code: 200,
+  message: 'OK',
+  data: {
+    user: {
+      email: testUser.email,
+      userName: testUser.userName,
+    },
+  },
+  token: '...',
+};
+const authFailed = {
+  code: 404,
+  message: 'Not Found',
+  data: 'additional error response data if needed',
+};
+
+app.get('/auth', (req, res) => {
+  if (testUser.userName === req.parsedQuery.userName
+    && testUser.password === req.parsedQuery.password) {
+    const token = jwt.sign(testUser, 'secretKey');
+    res.send(JSON.stringify(authSuccess));
+    res.end();
+  } else {
+    res.status(404).send(JSON.stringify(authFailed));
+    res.end();
+  }
 });
 
 module.exports = app;
