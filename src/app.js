@@ -102,4 +102,40 @@ app.get('/auth', (req, res) => {
   }
 });
 
+const testUser = {
+  id: '1',
+  userName: 'Luke',
+  email: 'jedimasta@republic.com',
+  password: 'may4',
+};
+
+const authSuccess = {
+  code: 200,
+  message: 'OK',
+  data: {
+    user: {
+      email: testUser.email,
+      userName: testUser.userName,
+    },
+  },
+  token: '...',
+};
+const authFailed = {
+  code: 404,
+  message: 'Not Found',
+  data: 'additional error response data if needed',
+};
+
+app.get('/auth', (req, res) => {
+  if (testUser.userName === req.parsedQuery.userName
+    && testUser.password === req.parsedQuery.password) {
+    const token = jwt.sign(testUser, 'secretKey');
+    res.send(JSON.stringify(authSuccess));
+    res.end();
+  } else {
+    res.send(JSON.stringify(authFailed));
+    res.end();
+  }
+});
+
 module.exports = app;
