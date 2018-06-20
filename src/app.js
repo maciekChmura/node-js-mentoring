@@ -37,27 +37,20 @@ app.use((req, res, next) => {
 });
 
 // do not verify token on /auth path
-const shouldVerifyToken = (req) => {
-  console.log(req.path !== '/auth');
-  return req.path !== '/auth';
-};
+const shouldVerifyToken = req => req.path !== '/auth';
 
 const verifyToken = (req, res, next) => {
-  console.log(res.headers);
-  const token = res.headers['x-access-token'];
+  const { token } = req.query;
   if (token) {
     jwt.verify(token, 'secretKey', (err) => {
       if (err) {
-        console.log('token NOT verified');
-        res.send('false');
+        res.send('token verification failed');
       } else {
-        console.log('token verified');
         next();
       }
     });
   } else {
-    console.log('no token');
-    res.status(403).send('no token');
+    res.status(403).send('no token provided');
   }
 };
 
@@ -104,17 +97,6 @@ const testUser = {
   password: 'may4',
 };
 
-const authSuccess = {
-  code: 200,
-  message: 'OK',
-  data: {
-    user: {
-      email: testUser.email,
-      userName: testUser.userName,
-    },
-  },
-  token: '...',
-};
 const authFailed = {
   code: 404,
   message: 'Not Found',
@@ -125,10 +107,11 @@ app.post('/auth', (req, res) => {
   if (testUser.userName === req.parsedQuery.userName
     && testUser.password === req.parsedQuery.password) {
     const token = jwt.sign(testUser, 'secretKey'); // eslint-disable-line no-unused-vars
-    console.log('token generated');
-    res.send(token);
+    res.json({
+      success: true,
+      token,
+    });
   } else {
-    console.log('auth failed');
     res.status(404).send(JSON.stringify(authFailed));
   }
 });
