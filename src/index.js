@@ -6,12 +6,11 @@ const fs = require('fs');
 const app = require('./app');
 
 const httpsOptions = {
-  key: fs.readFileSync('./csr.pem'),
-  cert: fs.readFileSync('./server.crt'),
+  key: fs.readFileSync('./key.pem', 'utf8'),
+  cert: fs.readFileSync('./cert.pem', 'utf8'),
 };
 
 const port = process.env.PORT || 8080;
-const httpsPort = process.env.HTTPSPORT || 443;
+const httpsPort = process.env.HTTPSPORT || 8081;
 http.createServer(app).listen(port);
 https.createServer(httpsOptions, app).listen(httpsPort);
-
