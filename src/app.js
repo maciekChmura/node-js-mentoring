@@ -8,6 +8,8 @@ const Importer = require('./importer');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 
 console.log(config.name); // eslint-disable-line no-console
 
@@ -19,6 +21,13 @@ const importer = new Importer();
 
 dirWatcher.watch('./data', 1000);
 importer.listen(dirWatcher);
+
+const testUser = {
+  id: '1',
+  username: 'Luke',
+  email: 'jedimasta@republic.com',
+  password: 'may4',
+};
 
 // express app
 const app = express();
@@ -36,29 +45,17 @@ app.use((req, res, next) => {
   next();
 });
 
-// do not verify token on /auth path
-const shouldVerifyToken = req => req.path !== '/auth';
-
-const verifyToken = (req, res, next) => {
-  const { token } = req.query;
-  if (token) {
-    jwt.verify(token, 'secretKey', (err) => {
-      if (err) {
-        res.send('token verification failed');
-      } else {
-        next();
-      }
-    });
-  } else {
-    res.status(403).send('no token provided');
-  }
-};
-
-app.use((req, res, next) => {
-  shouldVerifyToken(req)
-    ? verifyToken(req, res, next)
-    : next();
-});
+passport.use('local', new LocalStrategy(
+  {
+    session: false,
+  },
+  (username, password, done) => {
+    (testUser.userName !== username
+      && testUser.password !== password)
+      ? done(null, false, 'bad username')
+      : done(null, testUser);
+  },
+));
 
 app.get('/', (req, res) => {
   res.end('hello express');
@@ -90,30 +87,11 @@ app.post('/api/products', (req, res) => {
   res.end();
 });
 
-const testUser = {
-  id: '1',
-  userName: 'Luke',
-  email: 'jedimasta@republic.com',
-  password: 'may4',
-};
-
-const authFailed = {
-  code: 404,
-  message: 'Not Found',
-  data: 'additional error response data if needed',
-};
-
-app.post('/auth', (req, res) => {
-  if (testUser.userName === req.parsedQuery.userName
-    && testUser.password === req.parsedQuery.password) {
-    const token = jwt.sign(testUser, 'secretKey'); // eslint-disable-line no-unused-vars
-    res.json({
-      success: true,
-      token,
-    });
-  } else {
-    res.status(404).send(JSON.stringify(authFailed));
-  }
-});
-
+app.post(
+  '/auth',
+  passport.authenticate('local', { session: false }),
+  (req, res) => {
+    res.send('authenticated');
+  },
+);
 module.exports = app;
