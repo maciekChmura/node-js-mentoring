@@ -10,6 +10,7 @@ const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const GoogleStrategy = require('passport-google-oauth20');
 
 console.log(config.name); // eslint-disable-line no-console
 
@@ -57,6 +58,17 @@ passport.use('local', new LocalStrategy(
   },
 ));
 
+passport.use(new GoogleStrategy(
+  // options
+  {
+    clientID: '970345543056-qmlgjq9eg66re5jfe4r2jt98r285go3n.apps.googleusercontent.com',
+    clientSecret: 'hOOMreWTTzLlItufGA-jab0a',
+    callbackURL: '/auth/google/redirect',
+  },
+  // callback for future features
+  () => { }
+));
+
 app.get('/', (req, res) => {
   res.end('hello express');
 });
@@ -87,6 +99,7 @@ app.post('/api/products', (req, res) => {
   res.end();
 });
 
+// passport local auth route
 app.post(
   '/auth',
   passport.authenticate('local', { session: false }),
@@ -94,4 +107,20 @@ app.post(
     res.send('authenticated');
   },
 );
+
+// passport google auth route
+app.get(
+  '/auth/google',
+  passport.authenticate('google', {
+    session: false,
+    scope: ['profile']
+  })
+);
+// google redirect
+app.get(
+  '/auth/google/redirect',
+  (req, res) => {
+    res.send('authenticated with google');
+  });
+
 module.exports = app;
