@@ -1,27 +1,30 @@
 'use strict';
 
-const config = require('./config/config');
-const User = require('./models/User');
-const Product = require('./models/Product');
+// const config = require('./config/config');
+// const User = require('./models/User');
+// const Product = require('./models/Product');
 const { DirWatcher } = require('./dirWatcher');
 const Importer = require('./importer');
 const express = require('express');
 const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const logger = require('morgan');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const GoogleStrategy = require('passport-google-oauth20');
+const usersController = require('./controllers').users;
 
-console.log(config.name); // eslint-disable-line no-console
+// console.log(config.name); // eslint-disable-line no-console
 
-const product = new Product(); // eslint-disable-line no-unused-vars
-const user = new User(); // eslint-disable-line no-unused-vars
+// const product = new Product(); // eslint-disable-line no-unused-vars
+// const user = new User(); // eslint-disable-line no-unused-vars
 
 const dirWatcher = new DirWatcher();
 const importer = new Importer();
 
-dirWatcher.watch('./data', 1000);
-importer.listen(dirWatcher);
+// dirWatcher.watch('./data', 1000);
+// importer.listen(dirWatcher);
 
 const testUser = {
   id: '1',
@@ -33,16 +36,19 @@ const testUser = {
 // express app
 const app = express();
 app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(logger('dev'));
 
 app.use((req, res, next) => {
   req.parsedCookies = req.cookies;
-  console.log(req.parsedCookies); // eslint-disable-line no-console
+  // console.log(req.parsedCookies); // eslint-disable-line no-console
   next();
 });
 
 app.use((req, res, next) => {
   req.parsedQuery = req.query;
-  console.log(req.parsedQuery); // eslint-disable-line no-console
+  // console.log(req.parsedQuery); // eslint-disable-line no-console
   next();
 });
 
@@ -68,6 +74,12 @@ passport.use(new GoogleStrategy(
   // callback for future features
   () => { }
 ));
+
+app.get('/api', (req, res) => res.status(200).send({
+  message: 'Welcome to the Todos API!',
+}));
+
+app.post('/api/users', usersController.create);
 
 app.get('/', (req, res) => {
   res.end('hello express');
@@ -124,3 +136,5 @@ app.get(
   });
 
 module.exports = app;
+
+// export DATABASE_URL=postgres://wiwzedqf:BWZlKNfTGPVCXaNMO1NAENDHx2ezfjIc@tantor.db.elephantsql.com:5432/wiwzedqf

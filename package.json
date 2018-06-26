@@ -34,8 +34,12 @@
     "csvjson": "^5.0.0",
     "express": "^4.16.3",
     "jsonwebtoken": "^8.3.0",
+    "morgan": "^1.9.0",
     "passport": "^0.4.0",
     "passport-google-oauth20": "^1.0.0",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "pg": "^7.4.3",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^4.38.0"
   }
 }

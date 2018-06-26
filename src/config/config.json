@@ -1,3 +1,14 @@
 {
-  "name": "Node.js Homework Application"
+  "development": {
+    "url": "postgres://wiwzedqf:BWZlKNfTGPVCXaNMO1NAENDHx2ezfjIc@tantor.db.elephantsql.com:5432/wiwzedqf",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "waiyaki",
+    "password": null,
+    "database": "node-mentoring",
+    "host": "127.0.0.1",
+    "port": 5432,
+    "dialect": "postgres"
+  }
 }
