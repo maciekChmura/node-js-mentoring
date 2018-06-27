@@ -9,13 +9,7 @@ const env = process.env.NODE_ENV || 'development';
 const config = require(`${__dirname}/../config/config.json`)[env];
 const db = {};
 
-
 const sequelize = new Sequelize(config.url);
-// if (config.use_env_variable) {
-//   sequelize = new Sequelize(config.url);
-// } else {
-//   sequelize = new Sequelize(config.database, config.username, config.password, config);
-// }
 
 fs
   .readdirSync(__dirname)
@@ -35,6 +29,5 @@ Object.keys(db).forEach((modelName) => {
 });
 
 db.sequelize = sequelize;
-db.Sequelize = Sequelize;
 
 module.exports = db;
