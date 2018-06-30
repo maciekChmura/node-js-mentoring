@@ -8,10 +8,11 @@
       "type": "node",
       "request": "launch",
       "name": "run debug",
-      "program": "${workspaceFolder}\\src\\app.js",
+      "program": "${workspaceFolder}/src/index.js",
       "skipFiles": [
-        "<node_internals>/**/*.js",
         "${workspaceFolder}/node_modules/**/*.js",
+        "${workspaceFolder}/lib/**/*.js",
+        "<node_internals>/**/*.js",
       ],
       "useWSL": true
     }

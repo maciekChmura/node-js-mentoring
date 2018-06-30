@@ -1,27 +1,15 @@
 'use strict';
 
-const config = require('./config/config');
-const User = require('./models/User');
-const Product = require('./models/Product');
-const { DirWatcher } = require('./dirWatcher');
-const Importer = require('./importer');
 const express = require('express');
 const cookieParser = require('cookie-parser');
-const jwt = require('jsonwebtoken');
+const bodyParser = require('body-parser');
+const logger = require('morgan');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const GoogleStrategy = require('passport-google-oauth20');
+const usersController = require('./controllers').users;
+const productsController = require('./controllers').products;
 
-console.log(config.name); // eslint-disable-line no-console
-
-const product = new Product(); // eslint-disable-line no-unused-vars
-const user = new User(); // eslint-disable-line no-unused-vars
-
-const dirWatcher = new DirWatcher();
-const importer = new Importer();
-
-dirWatcher.watch('./data', 1000);
-importer.listen(dirWatcher);
 
 const testUser = {
   id: '1',
@@ -33,6 +21,9 @@ const testUser = {
 // express app
 const app = express();
 app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(logger('dev'));
 
 app.use((req, res, next) => {
   req.parsedCookies = req.cookies;
@@ -66,38 +57,24 @@ passport.use(new GoogleStrategy(
     callbackURL: '/auth/google/redirect',
   },
   // callback for future features
-  () => { }
+  () => { },
 ));
 
+// routes
 app.get('/', (req, res) => {
   res.end('hello express');
 });
 
-app.get('/api/products', (req, res) => {
-  res.send('Returning ALL products');
-  res.end();
-});
+app.get('/api', (req, res) => res.status(200).send({
+  message: 'Welcome to the API!',
+}));
 
-app.get('/api/products/:id', ({ params: { id } }, res) => {
-  res.send(`Return SINGLE product of id: ${id}`);
-  res.end();
-});
-
-app.get('/api/products/:id/reviews', (req, res) => {
-  const { id } = req.params;
-  res.send(`Return ALL reviews for a single product of id: ${id}`);
-  res.end();
-});
-
-app.get('/api/users', (req, res) => {
-  res.send('Return ALL users');
-  res.end();
-});
-
-app.post('/api/products', (req, res) => {
-  res.send('Add NEW product and return it');
-  res.end();
-});
+app.post('/api/users', usersController.create);
+app.get('/api/users', usersController.list);
+app.post('/api/users/:userId/products', productsController.create);
+app.get('/api/users/:userId', usersController.retrieve);
+app.put('/api/users/:userId', usersController.update);
+app.delete('/api/users/:userId', usersController.destroy);
 
 // passport local auth route
 app.post(
@@ -113,14 +90,15 @@ app.get(
   '/auth/google',
   passport.authenticate('google', {
     session: false,
-    scope: ['profile']
-  })
+    scope: ['profile'],
+  }),
 );
 // google redirect
 app.get(
   '/auth/google/redirect',
   (req, res) => {
     res.send('authenticated with google');
-  });
+  },
+);
 
 module.exports = app;
