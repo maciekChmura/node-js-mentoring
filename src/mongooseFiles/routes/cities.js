@@ -29,10 +29,37 @@ router.get('/randomCity', (req, res) => {
 });
 
 // POST
-router.post('/a', (req, res) => {
+router.post('/', (req, res) => {
   const city = new Cities();
   city.country = req.body.country;
-  Cities.save();
+  city.name = req.body.name;
+  city.capital = req.body.capital;
+  city.location.lat = req.body.location_lat;
+  city.location.lng = req.body.location_lng;
+  console.log(city);
+  city.save((error, city) => {
+    if (error) console.log(error);
+    res.send(city);
+  });
 });
+
+// PUT
+router.put('/:id', (req, res) => {
+  Cities.findByIdAndUpdate(
+    req.params.id, req.body, { new: true }, (error, city) => {
+      if (error) console.log(error);
+      res.send(city);
+    });
+});
+
+// DELETE
+router.put('/:id', (req, res) => {
+  Cities.findByIdAndRemove(
+    req.params.id, (error, city) => {
+      if (error) console.log(error);
+      res.send('City removed');
+    });
+});
+
 
 module.exports = router;
