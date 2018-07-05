@@ -5,6 +5,7 @@ const https = require('https');
 const fs = require('fs');
 const appSQL = require('./app'); // SQL implementation
 const appMongo = require('./mongoFiles/app'); // Mongo Driver implementation
+const appMongoose = require('./mongooseFiles/app');
 
 const httpsOptions = {
   key: fs.readFileSync('./key.pem', 'utf8'),
