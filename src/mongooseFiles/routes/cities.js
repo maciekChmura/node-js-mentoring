@@ -8,7 +8,13 @@ const router = Router();
 
 // GET
 router.get('/', (req, res) => {
-  res.send('hello Cities');
+  Cities.find({}, (error, cities) => {
+    if (error) {
+      console.log(error);
+    } else {
+      res.send(cities);
+    }
+  });
 });
 
 // GET random city
@@ -20,6 +26,13 @@ router.get('/randomCity', (req, res) => {
       res.send(getRandomItem(cities));
     }
   });
+});
+
+// POST
+router.post('/a', (req, res) => {
+  const city = new Cities();
+  city.country = req.body.country;
+  Cities.save();
 });
 
 module.exports = router;

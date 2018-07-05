@@ -1,7 +1,6 @@
 'use strict';
 
 const { Router } = require('express');
-const { getRandomItem } = require('../../helpers');
 const Users = require('../models/user');
 
 const router = Router();
@@ -11,6 +10,9 @@ router.get('/', (req, res) => {
   res.send('hello Users');
 });
 
+// POST
+router.post('/', (req, res) => {
 
+})
 
 module.exports = router;
