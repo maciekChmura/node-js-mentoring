@@ -17,6 +17,6 @@ const citySchema = mongoose.Schema({
     lat: String,
     lng: String,
   },
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('City', citySchema);

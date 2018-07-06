@@ -36,7 +36,6 @@ router.post('/', (req, res) => {
   city.capital = req.body.capital;
   city.location.lat = req.body.location_lat;
   city.location.lng = req.body.location_lng;
-  console.log(city);
   city.save((error, city) => {
     if (error) console.log(error);
     res.send(city);
@@ -53,7 +52,7 @@ router.put('/:id', (req, res) => {
 });
 
 // DELETE
-router.put('/:id', (req, res) => {
+router.delete('/:id', (req, res) => {
   Cities.findByIdAndRemove(
     req.params.id, (error, city) => {
       if (error) console.log(error);
