@@ -1,7 +1,6 @@
 'use strict';
 
-const asyncWrapper = require('./asyncWraper');
-const { getRandomItem } = require('../helpers');
+const { getRandomItem, asyncWrapper } = require('../helpers');
 
 const routes = (app, dbs) => {
   app.get('/', asyncWrapper(async (req, res) => {

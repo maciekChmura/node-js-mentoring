@@ -1,50 +1,29 @@
 'use strict';
 
 const { Router } = require('express');
-const Products = require('../models/product');
+const Product = require('../models/product');
+const { asyncWrapper } = require('../../helpers');
 
 const router = Router();
 
 // GET
-router.get('/', (req, res) => {
-  Products.find({}, (error, products) => {
-    if (error) {
-      console.log(error);
-    } else {
-      res.send(products);
-    }
-  });
-});
+router.get('/', asyncWrapper((req, res) => Product
+  .find({})
+  .then(products => res.send(products))));
 
-router.get('/:id', (req, res) => {
-  Products.findById(req.params.id, (error, product) => {
-    if (error) {
-      console.log(error);
-    } else {
-      res.send(product);
-    }
-  });
-});
+
+router.get('/:id', asyncWrapper((req, res) => Product
+  .findById(req.params.id)
+  .then(product => res.send(product))));
 
 // POST
-router.post('/', (req, res) => {
-  const product = new Products();
-  product.name = req.body.name;
-  product.weight = req.body.weight;
-  product.save((error, product) => {
-    if (error) console.log(error);
-    res.send(product);
-  });
-});
+router.post('/', asyncWrapper(({ body }, res) => new Product(body)
+  .save()
+  .then(product => res.send(product))));
 
 // DELETE
-router.delete('/:id', (req, res) => {
-  Products.findByIdAndRemove(
-    req.params.id, (error, product) => {
-      if (error) console.log(error);
-      res.send('Product removed');
-    });
-});
-
+router.delete('/:id', asyncWrapper((req, res) => Product
+  .findByIdAndRemove(req.params.id)
+  .then(product => res.send('Product removed'))));
 
 module.exports = router;
