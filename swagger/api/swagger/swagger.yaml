@@ -3,9 +3,9 @@ info:
   version: "0.0.1"
   title: Hello World App
 # during dev, should point to your local machine
-host: localhost:10010
+host: localhost:8082
 # basePath prefixes all resource paths 
-basePath: /
+basePath: /api
 # 
 schemes:
   # tip: remove http to make production-grade
@@ -183,13 +183,13 @@ paths:
   /users/{id}:
     # our controller name
     x-swagger-router-controller: users
-    get:
-      description: get the user
+    delete:
+      description: delete the user
       # define the type of response for Success "200" and Error
       parameters:
       - in: path
         name: id
-        description: id of user to get
+        description: id of user to delete
         type: string
         required: true
       responses:
@@ -205,15 +205,12 @@ paths:
     x-swagger-pipe: swagger_raw
 # complex objects have schema definitions
 definitions:
-  HelloWorldResponse:
-    required:
-      - message
-    properties:
-      message:
-        type: string
 # Cities
   PostCitySchema:
     type: object
+    required:
+      - capital
+      - name
     properties:
       country:
         type: string
