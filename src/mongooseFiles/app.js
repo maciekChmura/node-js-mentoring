@@ -4,14 +4,12 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
-const PORT = process.env.PORT || 5000;
-
 // import router
 const { citiesRoutes, usersRoutes, productsRoutes } = require('./routes');
 
 // connect to database
 const URI = 'mongodb://luke:4qwerty@ds217921.mlab.com:17921/node-mentoring';
-mongoose.connect(URI);
+mongoose.connect(URI, { useNewUrlParser: true });
 const db = mongoose.connection;
 
 // check for database errors
@@ -34,13 +32,17 @@ app.use((req, res, next) => {
   next();
 });
 
+app.get('/', (req, res) => {
+  res.end('hello express');
+});
+
+app.get('/api', (req, res) => res.status(200).send({
+  message: 'Welcome to the API!',
+}));
+
 // Routes
 app.use('/api/cities', citiesRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/products', productsRoutes);
-
-// start server
-app.listen(PORT, () => console.log('Mongoose app Listening on port 8082'));
-
 
 module.exports = app;
