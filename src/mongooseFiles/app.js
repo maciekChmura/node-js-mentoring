@@ -4,6 +4,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
+const PORT = process.env.PORT || 5000;
+
 // import router
 const { citiesRoutes, usersRoutes, productsRoutes } = require('./routes');
 
@@ -38,7 +40,7 @@ app.use('/api/users', usersRoutes);
 app.use('/api/products', productsRoutes);
 
 // start server
-app.listen(8082, () => console.log('Mongoose app Listening on port 8082'));
+app.listen(PORT, () => console.log('Mongoose app Listening on port 8082'));
 
 
 module.exports = app;
