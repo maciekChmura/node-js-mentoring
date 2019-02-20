@@ -1,3 +1,5 @@
+![node-logo](https://nodejs.org/static/images/logos/nodejs-new-pantone-black.png)  
+
 A mentoring program at Epam to learn NodeJS.  
 This project helped me to understand how to create backend with JavaScript.  
 Some of the topics covered:
