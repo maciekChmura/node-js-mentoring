@@ -34,7 +34,7 @@
     "commander": "^2.15.1",
     "cookie-parser": "^1.4.3",
     "csvjson": "^5.0.0",
-    "express": "^4.16.3",
+    "express": "^4.17.3",
     "jsonwebtoken": "^8.3.0",
     "mongodb": "^3.1.0",
     "mongoose": "^5.2.1",
